@@ -49,6 +49,12 @@ public class Permissiony {
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
+            // Clear chat by sending empty messages
+            for (int i = 0; i < 100; i++) {
+                player.sendSystemMessage(Component.literal(""));
+            }
+
+            // Show chunk loading message if player has permission
             if (hasPermission(player, "stylelabor.chunk_load_offline")) {
                 MinecraftServer server = player.getServer();
                 if (server != null) {
@@ -67,33 +73,29 @@ public class Permissiony {
                             "openpac player-config for " + player.getName().getString() + " set claims.forceload.offlineForceload true"
                     );
 
-                    // Clear chat by sending empty messages
-                    for (int i = 0; i < 100; i++) {
-                        player.sendSystemMessage(Component.literal(""));
-                    }
-
                     Component message = Component.literal("You have chunk loading permissions while offline")
                             .withStyle(ChatFormatting.GREEN);
                     player.sendSystemMessage(message);
-
-                    // Add website links
-                    Component websiteLink = Component.literal("⭐ Website:   stylelabor.de")
-                            .withStyle(style -> style.withColor(ChatFormatting.GOLD)
-                                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://stylelabor.de"))
-                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to open website"))));
-
-                    Component shopLink = Component.literal("🦜 Shop:      shop.stylelabor.de")
-                            .withStyle(style -> style.withColor(ChatFormatting.GOLD)
-                                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://shop.stylelabor.de"))
-                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to open shop"))));
-
-                    player.sendSystemMessage(Component.literal(""));  // Empty line as spacing
-                    player.sendSystemMessage(websiteLink);
-                    player.sendSystemMessage(shopLink);
+                    player.sendSystemMessage(Component.literal("")); // Spacing
                 }
             }
+
+            // Add website links for all players
+            Component websiteLink = Component.literal("⭐ Website:   stylelabor.de")
+                    .withStyle(style -> style.withColor(ChatFormatting.GOLD)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://stylelabor.de"))
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to open website"))));
+
+            Component shopLink = Component.literal("🦜 Shop:      shop.stylelabor.de")
+                    .withStyle(style -> style.withColor(ChatFormatting.GOLD)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://shop.stylelabor.de"))
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to open shop"))));
+
+            player.sendSystemMessage(websiteLink);
+            player.sendSystemMessage(shopLink);
         }
     }
+
 
 
 
